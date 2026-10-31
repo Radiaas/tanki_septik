@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tangki septik 3D – rumah tinggal 5 orang</title>
+<style>
+:root{--bg:#f3f1ec;--fg:#1d2420;--mut:#5d675f;--card:#fff;--line:#d6d3ca;--acc:#0f6e56;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a17;--fg:#e8ece6;--mut:#9aa69c;--card:#1d2621;--line:#33403a;--acc:#5dcaa5}}
+:root[data-theme="dark"]{--bg:#141a17;--fg:#e8ece6;--mut:#9aa69c;--card:#1d2621;--line:#33403a;--acc:#5dcaa5}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:16px}
+h1{font-size:22px;font-weight:600;margin:0 0 2px}
+p.sub{margin:0 0 12px;color:var(--mut)}
+#stage{position:relative;height:clamp(360px,62vh,600px);border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.lb{position:absolute;left:0;top:0;font-size:12px;padding:2px 7px;border-radius:10px;background:var(--bg);color:var(--fg);border:1px solid var(--line);white-space:nowrap;pointer-events:none;will-change:transform}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+button{font:inherit;font-size:14px;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+button[aria-pressed="true"]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.chips div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--mut)}
+.chips b{display:block;color:var(--fg);font-weight:600;font-size:14px}
+.lg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:12px}.lg section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}.lg h2{font-size:15px;font-weight:600;margin:0 0 6px}.lg ul{list-style:none;margin:0;padding:0;font-size:13px}.lg li{display:flex;gap:8px;align-items:center;padding:3px 0;color:var(--mut)}.lg li b{color:var(--fg);font-weight:600}.sw{flex:none;width:14px;height:14px;border-radius:3px;border:1px solid var(--line)}
+small{display:block;margin-top:12px;color:var(--mut);font-size:12px}
+</style>
+</head>
+<body>
+<main>
+<h1>Tangki septik dua ruang, 5 pemakai</h1>
+<p class="sub">Seret untuk memutar, scroll atau cubit untuk zoom. Desain mengacu SNI 2398:2017.</p>
+<div id="stage"><canvas id="c" aria-label="Model 3D tangki septik"></canvas></div>
+<div class="bar">
+<button id="bCut" aria-pressed="true">Potong depan</button>
+<button id="bSoil" aria-pressed="true">Tanah</button>
+<button id="bSpin" aria-pressed="false">Putar otomatis</button>
+<button id="bTxt" aria-pressed="true">Tulisan detail</button>
+<button id="bTank">Fokus tangki</button>
+<button id="bWell">Fokus sumur resapan</button>
+<button id="bReset">Lihat semua</button>
+</div>
+<div class="chips">
+<div><b>600 L/hari</b>5 orang × 120 L/orang/hari</div>
+<div><b>1,65 m³</b>Cair 2 hari + lumpur 3 tahun</div>
+<div><b>1,65 × 0,75 × 1,8 m</b>Ruang 1 ±2/3, ruang 2 ±1/3</div>
+<div><b>≥ 10 m</b>Ke sumur air bersih</div>
+<div><b>≥ 1,5 m</b>Ke bangunan</div>
+<div><b>Kuras 2–5 tahun</b>Sedot lumpur berkala</div>
+</div>
+<div class="lg">
+<section><h2>Sumur resapan, dari atas ke bawah</h2><ul>
+<li><i class="sw" style="background:#6e6d68"></i><span><b>Pelat beton + manhole Ø60</b> tebal ±12 cm</span></li>
+<li><i class="sw" style="background:#3a3d3b"></i><span><b>Ruang kosong</b> tempat outlet masuk</span></li>
+<li><i class="sw" style="background:#d9c48a"></i><span><b>Pasir kasar</b> ±25 cm</span></li>
+<li><i class="sw" style="background:#2b2118"></i><span><b>Ijuk</b> ±5 cm, penyaring</span></li>
+<li><i class="sw" style="background:#a7a08f"></i><span><b>Kerikil / batu pecah 2–3 cm</b> ±35 cm</span></li>
+<li><i class="sw" style="background:#7f7a72"></i><span><b>Batu kali / koral 5–10 cm</b> ±70 cm</span></li>
+<li><i class="sw" style="background:#8c8b85"></i><span><b>Buis beton berlubang</b> Ø100 cm</span></li>
+<li><i class="sw" style="background:#b8ad94"></i><span><b>Selimut kerikil</b> ±15 cm keliling</span></li>
+</ul></section>
+<section><h2>Tangki septik, dari bawah ke atas</h2><ul>
+<li><i class="sw" style="background:#d9c48a"></i><span><b>Pasir urug</b> ±10 cm</span></li>
+<li><i class="sw" style="background:#b3ad9c"></i><span><b>Lantai kerja</b> beton tipis ±5 cm</span></li>
+<li><i class="sw" style="background:#9d9b94"></i><span><b>Pelat dasar</b> beton bertulang ±15 cm</span></li>
+<li><i class="sw" style="background:#c0652a"></i><span><b>Tulangan</b> besi, jarak ±15 cm</span></li>
+<li><i class="sw" style="background:#9d9b94"></i><span><b>Dinding</b> beton bertulang atau bata plester aci</span></li>
+<li><i class="sw" style="background:#7a5a2c"></i><span><b>Lumpur</b> ±0,36 m (3 tahun)</span></li>
+<li><i class="sw" style="background:#2fa58a"></i><span><b>Air limbah</b> kedalaman efektif ±1,35 m</span></li>
+<li><i class="sw" style="background:#d9c98f"></i><span><b>Kerak (scum)</b> di permukaan air</span></li>
+</ul></section>
+</div>
+<small>Ketebalan lapisan adalah contoh, bukan angka baku: sesuaikan dengan SNI 2398:2017 dan hasil uji perkolasi. Model ilustrasi untuk perencanaan awal. Ukuran resapan harus dihitung dari uji perkolasi tanah, dan gambar kerja resmi perlu diverifikasi terhadap teks SNI.</small>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+var cv=document.getElementById('c'),st=document.getElementById('stage');
+var R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+R.setPixelRatio(Math.min(devicePixelRatio,2));
+var S=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,0.1,100);
+S.add(new THREE.AmbientLight(0xffffff,0.75));
+var dl=new THREE.DirectionalLight(0xffffff,0.8);dl.position.set(3,6,5);S.add(dl);
+var G=new THREE.Group();S.add(G);
+function M(c,o,t){return new THREE.MeshStandardMaterial({color:c,roughness:.85,transparent:o<1,opacity:o,depthWrite:o>=1})}
+var conc=M(0x9d9b94,0.62),water=M(0x2fa58a,0.5),slud=M(0x7a5a2c,1),pipeM=M(0x5b7fb3,1),ventM=M(0xcfd2c8,1),lidM=M(0x6e6d68,1),soilM=M(0x8a6a44,0.14),gravM=M(0xb09c78,0.9);
+var lineM=new THREE.LineBasicMaterial({color:0x4a4a46,transparent:true,opacity:.55});
+function box(w,h,d,x,y,z,m,e){var o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);if(e!==false)o.add(new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry),lineM));G.add(o);return o}
+function cylX(x1,x2,y,z,r,m){var o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,Math.abs(x2-x1),20),m);o.rotation.z=Math.PI/2;o.position.set((x1+x2)/2,y,z);G.add(o);return o}
+function cylY(x,y1,y2,z,r,m){var o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,Math.abs(y2-y1),20),m);o.position.set(x,(y1+y2)/2,z);G.add(o);return o}
+var L=1.65,W=0.75,H=1.8,t=0.15,sx=0.275;
+var V=function(x,y,z){return new THREE.Vector3(x,y,z)};
+var scumM=M(0xd9c98f,0.85),leanM=M(0xb3ad9c,1),sandM=M(0xd9c48a,1),rebM=new THREE.LineBasicMaterial({color:0xc0652a});
+function half(r,h,y,c,i){var m=M(c,1);m.side=THREE.DoubleSide;var g=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,40,1,false,Math.PI/2,Math.PI),m);g.position.set(wx,y,0);G.add(g);var p=new THREE.Mesh(new THREE.PlaneGeometry(2*r,h),m);p.position.set(wx,y,0.0005*i);G.add(p)}
+function grid(o,u,v,s){var p=[],i,q,a=u.length(),b=v.length(),un=u.clone().normalize(),vn=v.clone().normalize();for(i=0;i<=b+1e-6;i+=s){q=o.clone().addScaledVector(vn,i);p.push(q,q.clone().addScaledVector(un,a))}for(i=0;i<=a+1e-6;i+=s){q=o.clone().addScaledVector(un,i);p.push(q,q.clone().addScaledVector(vn,b))}G.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(p),rebM))}
+function dim(a,b){var d=b.clone().sub(a).normalize(),n=Math.abs(d.y)>.9?V(.06,0,0):V(0,.06,0);G.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([a,b,a.clone().sub(n),a.clone().add(n),b.clone().sub(n),b.clone().add(n)]),new THREE.LineBasicMaterial({color:0xd24a3a})))}
+box(L+2*t,t,W+2*t,0,-H-t/2,0,conc);
+box(L+2*t+0.3,0.05,W+2*t+0.3,0,-H-t-0.025,0,leanM);
+box(L+2*t+0.5,0.1,W+2*t+0.5,0,-H-t-0.1,0,sandM,false);
+box(t,H,W+2*t,-L/2-t/2,-H/2,0,conc);
+box(t,H,W+2*t,L/2+t/2,-H/2,0,conc);
+box(L,H,t,0,-H/2,-W/2-t/2,conc);
+var front=box(L,H,t,0,-H/2,W/2+t/2,conc);
+box(L+2*t,0.12,W+2*t,0,-0.06,0,conc);
+box(0.1,0.85,W,sx,-1.375,0,conc);
+box(0.1,0.63,W,sx,-0.435,0,conc);
+box(1.05,0.99,W,-0.3,-0.945,0,water,false);
+box(0.5,0.99,W,0.575,-0.945,0,water,false);
+box(0.1,0.2,W,sx,-0.85,0,water,false);
+box(1.05,0.36,W,-0.3,-1.62,0,slud,false);
+box(0.5,0.36,W,0.575,-1.62,0,slud,false);
+box(1.05,0.03,W,-0.3,-0.435,0,scumM,false);
+box(0.5,0.03,W,0.575,-0.435,0,scumM,false);
+grid(V(-L/2-t+.04,-H-t/2,-W/2-t+.04),V(L+2*t-.08,0,0),V(0,0,W+2*t-.08),.15);
+grid(V(-L/2-t+.04,-0.06,-W/2-t+.04),V(L+2*t-.08,0,0),V(0,0,W+2*t-.08),.15);
+grid(V(-L/2,-H+.05,-W/2-t/2),V(L,0,0),V(0,H-.1,0),.15);
+grid(V(-L/2-t/2,-H+.05,-W/2-t+.04),V(0,0,W+2*t-.08),V(0,H-.1,0),.15);
+grid(V(L/2+t/2,-H+.05,-W/2-t+.04),V(0,0,W+2*t-.08),V(0,H-.1,0),.15);
+dim(V(-L/2,0.3,0.55),V(L/2,0.3,0.55));
+dim(V(-L/2-.2,0.3,-W/2),V(-L/2-.2,0.3,W/2));
+dim(V(-1.1,-H,0.6),V(-1.1,0,0.6));
+box(0.5,0.05,0.5,-0.35,0.025,0,lidM);
+box(0.3,0.05,0.3,0.5,0.025,0,lidM);
+cylX(-1.75,-0.7,-0.35,0,0.05,pipeM);
+cylY(-0.7,-0.35,-0.75,0,0.05,pipeM);
+cylY(0.7,-0.45,-0.85,0,0.05,pipeM);
+cylX(0.7,2.2,-0.45,0,0.05,pipeM);
+cylY(0.72,0.9,-0.12,0.28,0.03,ventM);
+cylX(0.72,0.84,0.9,0.28,0.03,ventM);
+cylY(0.84,0.9,0.8,0.28,0.03,ventM);
+cylY(0.84,0.8,0.77,0.28,0.034,M(0x333333,1));
+var wx=2.35;
+half(0.66,2.1,-1.05,0xb8ad94,0);
+half(0.5,2,-1,0x8c8b85,1);
+half(0.42,0.7,-1.65,0x7f7a72,2);
+half(0.42,0.35,-1.125,0xa7a08f,3);
+half(0.42,0.05,-0.925,0x2b2118,4);
+half(0.42,0.25,-0.775,0xd9c48a,5);
+half(0.42,0.53,-0.385,0x3a3d3b,6);
+
+var cap=new THREE.Mesh(new THREE.CylinderGeometry(0.58,0.58,0.12,32),conc);cap.position.set(wx,-0.06,0);G.add(cap);
+var mh=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,0.05,24),lidM);mh.position.set(wx,0.025,0);G.add(mh);
+var soil=box(5.4,2.4,3,0.55,-1.2,0,soilM);
+var grid=new THREE.GridHelper(6,12,0x888880,0x888880);grid.position.set(0.55,0.001,0);grid.material.transparent=true;grid.material.opacity=.25;G.add(grid);
+G.position.x=-0.55;
+var tgt=new THREE.Vector3(0,-0.8,0),th0=0.55,ph0=1.15,rd0=7.2,th=th0,ph=ph0,rd=rd0,spin=false;
+function place(){cam.position.set(tgt.x+rd*Math.sin(ph)*Math.sin(th),tgt.y+rd*Math.cos(ph),tgt.z+rd*Math.sin(ph)*Math.cos(th));cam.lookAt(tgt)}
+var defs=[["Inlet dari kloset",-1.45,-0.35,0],["Outlet (lebih rendah 5–10 cm)",1.3,-0.45,0],["Sekat + lubang",sx,-0.85,0.4],["Lumpur",-0.3,-1.55,0.4],["Air limbah",-0.3,-0.85,0.4],["Kerak (scum)",0.6,-0.4,0.4],["Manhole",-0.35,0.12,0],["Pipa ventilasi + kasa",0.84,0.98,0.28],["Sumur resapan",wx,0.14,0],["Buis beton berlubang",wx+0.5,-0.3,0],["Selimut kerikil",wx-0.66,-1.9,0],["Tulangan besi",-0.3,-1.88,0.4],["Lantai kerja + pasir urug",0,-2.08,0.5],["1,65 m",0,0.42,0.55],["0,75 m",-L/2-.2,0.42,0],["1,8 m",-1.1,-0.9,0.6]];
+var labs=defs.map(function(d){var e=document.createElement('div');e.className='lb';e.textContent=d[0];st.appendChild(e);return {e:e,p:new THREE.Vector3(d[1],d[2],d[3]).add(G.position)}});
+function size(){var w=st.clientWidth,h=st.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener('resize',size);
+function frame(){
+if(spin)th+=0.004;
+place();
+var w=st.clientWidth,h=st.clientHeight;
+labs.forEach(function(l){var v=l.p.clone().project(cam);var x=(v.x*.5+.5)*w,y=(-v.y*.5+.5)*h;l.e.style.transform='translate('+(x-l.e.offsetWidth/2)+'px,'+(y-10)+'px)';l.e.style.visibility=v.z<1?'visible':'hidden'});
+R.render(S,cam);requestAnimationFrame(frame)}
+var ps={},pd=0;
+cv.addEventListener('pointerdown',function(e){cv.setPointerCapture(e.pointerId);ps[e.pointerId]=[e.clientX,e.clientY];cv.style.cursor='grabbing'});
+cv.addEventListener('pointerup',function(e){delete ps[e.pointerId];pd=0;cv.style.cursor='grab'});
+cv.addEventListener('pointermove',function(e){var p=ps[e.pointerId];if(!p)return;var ids=Object.keys(ps);
+if(ids.length>1){ps[e.pointerId]=[e.clientX,e.clientY];var a=ps[ids[0]],b=ps[ids[1]],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pd)rd=Math.min(14,Math.max(2.5,rd*pd/d));pd=d;return}
+th-=(e.clientX-p[0])*0.008;ph=Math.min(1.6,Math.max(0.2,ph-(e.clientY-p[1])*0.008));ps[e.pointerId]=[e.clientX,e.clientY]});
+cv.addEventListener('wheel',function(e){e.preventDefault();rd=Math.min(14,Math.max(2.5,rd*(1+e.deltaY*0.001)))},{passive:false});
+function tg(id,fn){var b=document.getElementById(id);b.addEventListener('click',function(){var on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);fn(on)})}
+tg('bCut',function(on){front.visible=!on});
+tg('bSoil',function(on){soil.visible=on});
+tg('bSpin',function(on){spin=on});
+tg('bTxt',function(on){labs.forEach(function(l){l.e.style.display=on?'':'none'});document.querySelector('.lg').style.display=on?'':'none'});
+document.getElementById('bReset').addEventListener('click',function(){th=th0;ph=ph0;rd=rd0;tgt.set(0,-0.8,0)});
+document.getElementById('bTank').addEventListener('click',function(){th=0.5;ph=1.2;rd=4.6;tgt.set(-0.55,-0.9,0)});
+document.getElementById('bWell').addEventListener('click',function(){th=0.2;ph=1.35;rd=4;tgt.set(1.8,-1,0)});
+front.visible=false;
+size();frame();
+})();
+</script>
+</body>
+</html>
